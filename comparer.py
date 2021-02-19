@@ -1,9 +1,13 @@
 import argparse
 import os
 from colorama import Fore, Back, Style
+from collections import Counter
+from statistics import mean 
+from math import floor
 
 # Test for specific lengths or range of langths 
 # test for entropy - does it change a lot? 
+# Print firstline at the end to also color it 
 
 inhndle = open('input.txt', 'r').readlines()
 
@@ -35,22 +39,62 @@ def compareCharacterAtPosition(startline = 0):
 
 # Compare whether any of substrings of specified length
 # appear in other lines
-def compareSubstrings(startline = 0, slenS = 1, slenE = 1):
+def compareSubstrings(startline = 0, slenS = 1):
     # Substrings must have length
     assert slenS > 0
-    if slenS == slenE: slenS = 1 
 
     # Print first line and separator
     print(inhndle[startline], end='')
     print(Fore.WHITE + "=" * 60)
     for line in set(inhndle) - {inhndle[startline]}:
-        
+        linecopy = line[:]
+        while linecopy:
+            snip = linecopy[:slenS]
+            linecopy = linecopy[slenS:]
+            if snip in inhndle[startline]:
+                print(Fore.GREEN + snip, end="")
+            else:
+                print(Fore.WHITE + snip, end="")
+        print()
+    
+    print(Fore.WHITE + "=" * 60)
+#        
 
+def printEntropy(startline = 0):
+    # enumerate elements in first line 
+    for i, ps in enumerate(inhndle[startline]):
+        # For each position, create list with all characters on this position (on other lines)
+        charsAtPos = []
+        for line in inhndle:
+            # handle case when there is different number of elements in lists
+            try:
+                charsAtPos += line[i]
+            except Exception:
+                pass
+        
+        if not charsAtPos:
+            continue
+
+        avg = mean(list(dict(Counter(charsAtPos)).values()))
+        print(":: ", avg)
+
+        if avg < len(charsAtPos) / 6 or floor(avg) == 1:
+            print(Fore.WHITE + ps, end="")
+        elif avg < len(charsAtPos) / 5:
+            print(Fore.GREEN + ps, end="")
+        elif avg < len(charsAtPos) / 4:
+            print(Fore.YELLOW + ps, end="")
+        elif avg < len(charsAtPos) / 2:
+            print(Fore.RED + ps, end="")
+    print()
 
         
+        
+            
     
 
-# print(Fore.RED + str(inhndle.readlines()))
+#compareSubstrings(slenS=2)
+printEntropy(0)
 
 
 #parser = argparse.ArgumentParser(description=\
