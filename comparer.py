@@ -14,10 +14,12 @@ inhndle = open('input.txt', 'r').readlines()
 # Compare characters in each line at specific position
 # i.e. in abc \n abc a is compared to a etc. 
 def compareCharacterAtPosition(startline = 0):
+    assert startline < len(inhndle)
+
     # Print first line and separator
     print(inhndle[startline], end='')
     print(Fore.WHITE + "=" * 60)
-    for line in set(inhndle) - {inhndle[startline]}:
+    for line in inhndle[ :startline] + inhndle[startline + 1:]:
         for i,v in enumerate(line):
             # For cases when startline is shorter than the other lines
             try: 
@@ -46,7 +48,7 @@ def compareSubstrings(startline = 0, slenS = 1):
     # Print first line and separator
     print(inhndle[startline], end='')
     print(Fore.WHITE + "=" * 60)
-    for line in set(inhndle) - {inhndle[startline]}:
+    for line in inhndle[ :startline] + inhndle[startline + 1:]:
         linecopy = line[:]
         while linecopy:
             snip = linecopy[:slenS]
@@ -94,7 +96,8 @@ def printEntropy(startline = 0):
     
 
 #compareSubstrings(slenS=2)
-printEntropy(0)
+# printEntropy(0)
+compareCharacterAtPosition(2)
 
 
 #parser = argparse.ArgumentParser(description=\
